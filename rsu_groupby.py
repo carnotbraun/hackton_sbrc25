@@ -1,5 +1,4 @@
 # Author: Carnot Braun
-# Email: carnotbraun@gmail.com
 # Description: Script for grouping RSUs by covered roads.
 
 import os
@@ -8,9 +7,6 @@ from bs4 import BeautifulSoup
 from scipy.spatial.distance import euclidean
 import traci
 import pickle
-
-# Add dictictory to use as label for the environment > 1 = lust, 2 = most, 3 = cologne
-env = {1: 'lust', 2: 'most', 3: 'cologne'}
 
 # Create Road Network Graph Representation
 def read_network(network_file):
@@ -33,7 +29,7 @@ def read_network(network_file):
 def get_rsus():
     rsus = []
 
-    with open(f'/Users/carnotbraun/mestrado/simu/utils/rsus_lust.txt', 'r') as rsu_file:
+    with open(f'/simu/utils/rsus_lust.txt', 'r') as rsu_file:
         for line in rsu_file:
             line = line.strip().split('\t')
             rsus.append({'x': float(line[0]), 'y': float(line[1])})
@@ -69,17 +65,17 @@ def get_covered_roads(rsus, edges):
     return edges_per_rsu
 
 def main():
-    sumo_exec = "/Users/carnotbraun/mestrado/simu/sumo/bin/sumo"
+    sumo_exec = "/simu/sumo/bin/sumo"
     sumo_cmd = [sumo_exec, '-c', 
-                '/Users/carnotbraun/mestrado/simu/LuSTScenario/scenario/due.actuated.sumocfg']
+                '/LuSTScenario/scenario/due.actuated.sumocfg']
     traci.start(sumo_cmd)
 
-    edges = read_network('/Users/carnotbraun/mestrado/simu/LuSTScenario/scenario/lust.net.xml')
+    edges = read_network('/LuSTScenario/scenario/lust.net.xml')
     rsus = get_rsus()
     edges_per_rsu = get_covered_roads(rsus, edges)
 
     # Read data from CSV files
-    csv_files = [f'/Users/carnotbraun/sbrc-hack/bd/{edge}.csv' for rsu_edges in edges_per_rsu.values() for edge in rsu_edges]
+    csv_files = [f'/sbrc-hack/bd/{edge}.csv' for rsu_edges in edges_per_rsu.values() for edge in rsu_edges]
     roads_in_rsu = {}
 
     for csv_file in csv_files:
@@ -95,7 +91,7 @@ def main():
 
     # Save covered roads for each RSU
     for rsu in edges_per_rsu:
-        with open(f'/Users/carnotbraun/sbrc-hack/bd_pickle/RSU_{rsu}.pickle', 'wb') as rsu_file:
+        with open(f'/sbrc-hack/bd_pickle/RSU_{rsu}.pickle', 'wb') as rsu_file:
             print(f'Writing Roads Covered by RSU {rsu}...')
             pickle.dump(edges_per_rsu[rsu], rsu_file, protocol=pickle.HIGHEST_PROTOCOL)
 

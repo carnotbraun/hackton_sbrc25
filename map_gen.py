@@ -1,3 +1,5 @@
+# Author: Carnot Braun
+# Description: Script for generating a map of average noise emissions from a traffic simulation scenario (LuST).
 import pandas as pd
 import os
 import xml.etree.ElementTree as ET
@@ -5,8 +7,8 @@ from shapely.geometry import LineString
 import geopandas as gpd
 import matplotlib.pyplot as plt
 
-# === 1. Calcular média de emissão por edge (com base em vários arquivos .csv) ===
-folder_path = "/Users/carnotbraun/sbrc-hack/bd/"
+# Calcular média de emissão por edge (com base em vários arquivos .csv)
+folder_path = "/sbrc-hack/bd/"
 noise_data = []
 
 for filename in os.listdir(folder_path):
@@ -18,8 +20,8 @@ for filename in os.listdir(folder_path):
 
 df_noise = pd.DataFrame(noise_data)
 
-# === 2. Parsear o .net.xml e extrair geometria das ruas ===
-tree = ET.parse("/Users/carnotbraun/mestrado/simu/LuSTScenario/scenario/lust.net.xml")
+# Parsear o .net.xml e extrair geometria das ruas
+tree = ET.parse("/LuSTScenario/scenario/lust.net.xml")
 root = tree.getroot()
 
 geometries = []
@@ -39,11 +41,11 @@ for edge in root.findall("edge"):
 
 gdf_edges = gpd.GeoDataFrame(geometries, crs="EPSG:32632")  # UTM 32N (aproximadamente o usado no LuST)
 
-# === 3. Juntar dados de ruído com geometria ===
+# Juntar dados de ruído com geometria
 gdf_merged = gdf_edges.merge(df_noise, on="road_id", how="left")
 gdf_merged = gdf_merged[gdf_merged["avg_noise_emission"].notna()]  # Remove edges sem dados
 
-# === 4. Plotar o mapa ===
+# Plotar o mapa 
 fig, ax = plt.subplots(figsize=(10, 8))
 gdf_merged.plot(column="avg_noise_emission", cmap="inferno", linewidth=1, legend=True, ax=ax)
 plt.title("Mapa de Emissão Média de Ruído por Rua (LuST)", fontsize=16)
@@ -53,11 +55,11 @@ plt.savefig("mapa_ruido_lust.png", dpi=300, bbox_inches="tight")
 
 import seaborn as sns
 
-# === 1. Extrair coordenadas do centro de cada rua (LineString)
+#  Extrair coordenadas do centro de cada rua (LineString)
 gdf_merged["x"] = gdf_merged.geometry.centroid.x
 gdf_merged["y"] = gdf_merged.geometry.centroid.y
 
-# === 2. Criar o jointplot hexbin com seaborn
+#  Criar o jointplot hexbin com seaborn
 sns.set(style="white", font_scale=1.2)
 plot = sns.jointplot(
     data=gdf_merged,
@@ -72,5 +74,5 @@ plot = sns.jointplot(
 plot.fig.suptitle("Densidade de Emissão de Ruído no Cenário LuST", y=1.02)
 plot.set_axis_labels("X (metros)", "Y (metros)")
 
-# === 3. Salvar figura
+# Salvar figura
 plot.fig.savefig("heatmap_hexbin_ruido.png", dpi=300,bbox_inches="tight")

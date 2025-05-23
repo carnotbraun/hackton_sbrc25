@@ -1,15 +1,12 @@
-# Author: Carnot Braun & Allan M. de Souza
-# Email: carnotbraun@gmail.com & allanms@unicamp.br
+# Author: Carnot Braun
 # Description: Script for extracting road data from SUMO simulation.
 
 import os
 import sys
 import csv
 
-# Add dict to use as label for the environment > 1 = lust, 2 = most, 3 = cologne
-env = {1: 'lust', 2: 'most', 3: 'cologne'}
 # Add SUMO tools directory to the system path
-sys.path.append(os.path.join('c:', os.sep, '/Users/carnotbraun/mestrado/simu/sumo/tools'))
+sys.path.append(os.path.join('c:', os.sep, '/simu/sumo/tools'))
 
 # Now you can import traci
 import traci
@@ -17,7 +14,7 @@ import sumolib
 
 # Function to execute the SUMO simulation
 def run_simulation(config_file):
-    sumo_exec = "/Users/carnotbraun/mestrado/simu/sumo/bin/sumo"
+    sumo_exec = "/simu/sumo/bin/sumo"
     sumo_cmd = [sumo_exec, "-c", config_file, "--tripinfo-output", 
                 'output.xml', "--scale", '0.3','--threads', '8']
     
@@ -35,7 +32,7 @@ def run_simulation(config_file):
                     average_vehicles = traci.edge.getLastStepVehicleNumber(edge)
                     noise_emission = traci.edge.getNoiseEmission(edge)
                     
-                    filepath = f'/Users/carnotbraun/sbrc-hack/bd/{edge}.csv'
+                    filepath = f'/sbrc-hack/bd/{edge}.csv'
                     
                     with open(filepath, 'a') as road_file:
                         writer = csv.writer(road_file)
@@ -55,7 +52,7 @@ def run_simulation(config_file):
 
 # Main function
 def main():
-    config_file = "/Users/carnotbraun/mestrado/simu/LuSTScenario/scenario/due.actuated.sumocfg"
+    config_file = "/LuSTScenario/scenario/due.actuated.sumocfg"
     run_simulation(config_file)
 
 # Execute main function

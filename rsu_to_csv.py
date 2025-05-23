@@ -1,5 +1,4 @@
-# Author: Carnot Braun & Allan M. de Souza
-# Email: carnotbraun@gmail.com & allanms@unicamp.br
+# Author: Carnot Braun
 # Description: This script reads the list of edges for each RSU and converts the data from the CSV
 # files to a single CSV file for each RSU.
 
@@ -8,14 +7,14 @@ import os
 import pickle
 
 # Folder path
-folder_path = '/Users/carnotbraun/sbrc-hack/bd/'
+folder_path = '/sbrc-hack/bd/'
 #Adapt the range for all in the folder path
 for rsu_id in range(13):
     # Creating a list to store the DataFrames of each CSV file
     dfs = []
 
     # Load the list of edges for the current RSU
-    roads_file = open(f'/Users/carnotbraun/sbrc-hack/bd_pickle/RSU_{rsu_id}.pickle', 'rb')
+    roads_file = open(f'/sbrc-hack/bd_pickle/RSU_{rsu_id}.pickle', 'rb')
     rsu_edge_list = pickle.load(roads_file)
     
     # Iterating over the CSV files and reading the data
@@ -30,4 +29,4 @@ for rsu_id in range(13):
     combined_df = pd.concat(dfs)
 
     # Save the combined DataFrame to CSV
-    combined_df.to_csv(f'/Users/carnotbraun/sbrc-hack/bd_rsu_csv/RSU_{rsu_id}.csv', index=False)
+    combined_df.to_csv(f'/sbrc-hack/bd_rsu_csv/RSU_{rsu_id}.csv', index=False)

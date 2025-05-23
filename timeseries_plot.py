@@ -1,5 +1,5 @@
-# Authors: Carnot Braun & Allan M. de Souza
-# Email: carnotbraun@gmail.com & allanms@unicamp.br
+# Authors: Carnot Braun
+# Email: carnotbraun@gmail.com
 # Description: Script for plotting a time series of CO2 emissions from RSUs.
 
 import pandas as pd
@@ -10,7 +10,7 @@ import os
 plt.rcParams.update({'font.size': 20})
 
 def load_data():
-    folder_path = '/Users/carnotbraun/sbrc-hack/bd_rsu_csv/'
+    folder_path = '/sbrc-hack/bd_rsu_csv/'
     files = [file for file in os.listdir(folder_path) if file.endswith('.csv')]
     dfs = []
     

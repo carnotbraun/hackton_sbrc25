@@ -1,3 +1,5 @@
+# Author: Carnot Braun
+# Description: Script for generating a map of average noise emissions from a traffic simulation scenario (LuST).
 import os
 import pickle
 import pandas as pd
@@ -5,7 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Diretórios dos dados
-base_dir = "/Users/carnotbraun/sbrc-hack"
+base_dir = "/sbrc-hack"
 csv_dir = os.path.join(base_dir, "bd")
 pickle_dir = os.path.join(base_dir, "bd_pickle")
 
